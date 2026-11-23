@@ -27379,21 +27379,7 @@ components:
         text:
           type: string
           description: What was said.
-    UnverifiedModel:
-      type: object
-      description: The model a person chose for this conversation, set aside because it hasn't been checked to work with the client this Bot's harness ships. Runs answer on the default model until it has been. Absent when the choice is in use, or set aside for another reason.
-      required:
-        - model
-        - label
-      properties:
-        model:
-          type: string
-          description: The chosen model's id.
-        label:
-          type: string
-          description: Its name, as a model picker shows it.
     AiConnectionProviderAnswer:
-    AiConnectionProvider:
       type: string
       x-extensible-enum:
         - openai
@@ -27457,7 +27443,7 @@ components:
             - organization
           description: 'Whose connection it is. personal: the person''s own, which they fix themselves. organization: the organization''s, which an administrator fixes.'
         provider:
-          $ref: '#/components/schemas/AiConnectionProvider'
+          $ref: '#/components/schemas/AiConnectionProviderAnswer'
         login:
           description: How OpenBot signs in to it. Null for a member reading the organization's.
           oneOf:
@@ -27843,7 +27829,7 @@ components:
           type: string
           description: 'The connection''s id. Opaque; clients never read anything into it. Unique within its list only: a person''s own connection and the organization''s may share an id, so a client says whose it means.'
         provider:
-          $ref: '#/components/schemas/AiConnectionProvider'
+          $ref: '#/components/schemas/AiConnectionProviderAnswer'
         login:
           $ref: '#/components/schemas/AiConnectionLogin'
         model:
