@@ -215,6 +215,11 @@ type ChatTranscriptProps = {
    */
   stopped?: string;
   /**
+   * Drawn under `stopped`, while it shows: what the conversation itself knows about why, such as
+   * the AI connection it runs on having stopped working (stopped-connection-notice.tsx).
+   */
+  stoppedNotice?: React.ReactNode;
+  /**
    * Carry on with a turn that was cut off part way, drawn as a button beside `stopped`. Absent for
    * a turn that ended for a reason carrying on would not fix (a refusal, a Bot no longer shared).
    */
@@ -356,10 +361,13 @@ function Thinking() {
 function Stopped({
   reason,
   onCarryOn,
+  notice,
 }: {
   reason: string;
   /** A turn cut off part way can be carried on from here. See `onCarryOn` on the transcript. */
   onCarryOn?: () => void;
+  /** More about why, drawn under it. See `stoppedNotice` on the transcript. */
+  notice?: React.ReactNode;
 }) {
   return (
     <div
@@ -381,6 +389,7 @@ function Stopped({
           <AddModelKeyLink reason={reason} />
         </>
       )}
+      {notice}
     </div>
   );
 }
@@ -2062,6 +2071,7 @@ export function ChatTranscript({
   queued = EMPTY_QUEUE,
   restoring = false,
   stopped,
+  stoppedNotice,
   onCarryOn,
   working,
 }: ChatTranscriptProps) {
@@ -2653,7 +2663,11 @@ export function ChatTranscript({
                   </ArrivalsLiveContext.Provider>
                   <div className="contents [&>*]:order-1">
                     {stopped ? (
-                      <Stopped onCarryOn={onCarryOn} reason={stopped} />
+                      <Stopped
+                        notice={stoppedNotice}
+                        onCarryOn={onCarryOn}
+                        reason={stopped}
+                      />
                     ) : waitingOnTheModel ? (
                       <Thinking />
                     ) : null}

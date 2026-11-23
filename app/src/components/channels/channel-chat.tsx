@@ -33,6 +33,10 @@ import { ConversationIntro } from "@/components/channels/conversation-intro";
 import { ConversationView } from "@/components/channels/conversation-view";
 import { ProgressRow } from "@/components/channels/progress-row";
 import {
+  openComposerModelPicker,
+  StoppedConnectionNotice,
+} from "@/components/channels/stopped-connection-notice";
+import {
   seedMessage,
   takeFirstMessage,
   transcriptMessages,
@@ -2065,6 +2069,7 @@ export function ChannelChat({
                 disabled={!channel.active}
                 onChange={runModel.choose}
                 saving={runModel.saving}
+                stopped={runModel.stopped !== null}
                 value={runModel.value}
               />
             }
@@ -2222,6 +2227,14 @@ export function ChannelChat({
              * run before closing it; see server/src/channels/stall-guard.ts.
              */
             stopped={runError ?? undefined}
+            stoppedNotice={
+              runError !== null && picksModel ? (
+                <StoppedConnectionNotice
+                  channelId={channel.id}
+                  onChooseModel={() => openComposerModelPicker()}
+                />
+              ) : undefined
+            }
             /*
              * A turn cut off part way (its backend stopped answering, its run ended unheard, its
              * stream broke, or the server says its reply came back incomplete or its model's
